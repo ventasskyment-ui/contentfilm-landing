@@ -1,0 +1,29 @@
+# Dependencias y archivos temporales del sistema
+node_modules/
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Scripts de inspección y migración
+audit_refs.py
+unify_assets.py
+
+# Material en bruto de video y diseño no desplegable (conservar localmente)
+raw_materials/
+Content Film web/
+Casos.dc.html
+
+.env*
+.vercel
+
+
+*.py
+simulate_ue.js
+update_hero_to_videos.js
+_blob/
+assets/
+logos/
+*.mp4
+index.backup_final_sesion.html
+

@@ -1,0 +1,5 @@
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+assets/9c8357c67ee9ea26acbeeef825ff9e39 filter=lfs diff=lfs merge=lfs -text
+assets/a8ead70aa03c83f5098a76a73a4bd5cc filter=lfs diff=lfs merge=lfs -text
+assets/34ecce513eb40fe544794b77ff186902 filter=lfs diff=lfs merge=lfs -text
+assets/47902f57252f87c80c652e106c5a6c13 filter=lfs diff=lfs merge=lfs -text

@@ -1,0 +1,20 @@
+{
+  "name": "content-film-landing",
+  "version": "1.0.0",
+  "description": "Landing page oficial de Content Film",
+  "main": "index.html",
+  "scripts": {
+    "start": "serve .",
+    "dev": "python -m http.server 8000"
+  },
+  "keywords": [
+    "landing-page",
+    "content-film",
+    "video-production"
+  ],
+  "author": "Content Film",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.4"
+  }
+}
