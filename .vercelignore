@@ -1,0 +1,9 @@
+assets
+logos
+Content Film web
+_blob
+*.mp4
+*.py
+*.js.map
+*.tmp
+*.log
