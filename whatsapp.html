@@ -1038,6 +1038,79 @@ a{color:#FFC400}a:hover{color:#FFD54A}
     }
   }
 
+
+  /* Animación del cursor apuntando al botón Solo Grabación 4h */
+  .portfolio-tabs-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .portfolio-tabs-hint {
+    font-size: 15px;
+    line-height: 1.5;
+    color: #C9C9C4;
+    margin-bottom: 22px;
+    max-width: 580px;
+    padding: 0 16px;
+  }
+  .portfolio-tabs-hint strong {
+    color: #FFC400;
+  }
+  .portfolio-tabs-container {
+    position: relative;
+    display: inline-flex;
+    justify-content: center;
+  }
+  .pointer-cursor-anim {
+    position: absolute;
+    right: 48px;
+    bottom: -32px;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+    z-index: 10;
+    animation: clickPointerBounce 2.4s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.85));
+  }
+  @keyframes clickPointerBounce {
+    0% {
+      transform: translate(24px, 24px) scale(1);
+      opacity: 0;
+    }
+    20% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    40% {
+      transform: translate(0, 0) scale(0.82);
+    }
+    55% {
+      transform: translate(0, 0) scale(1);
+    }
+    75% {
+      transform: translate(0, 0) scale(0.82);
+    }
+    88% {
+      transform: translate(0, 0) scale(1);
+      opacity: 1;
+    }
+    100% {
+      transform: translate(16px, 16px) scale(1);
+      opacity: 0;
+    }
+  }
+  @media (max-width: 768px) {
+    .pointer-cursor-anim {
+      right: 22px;
+      bottom: -28px;
+      width: 28px;
+      height: 28px;
+    }
+  }
+
 </style>
 </helmet>
 <div style="background: #000000; color: #F5F5F2; font-family: Inter, system-ui, sans-serif; min-height: 100vh">
@@ -1197,10 +1270,15 @@ a{color:#FFC400}a:hover{color:#FFD54A}
 <div style="font-family: 'JetBrains Mono', monospace; font-size: 13px; color: #FFC400; text-align: center">DALE PLAY</div>
 <h2 style="font-family: Archivo, sans-serif; font-weight: 700; font-size: clamp(30px, 3.6vw, 46px); text-align: center; letter-spacing: -0.02em; margin: 12px 0 0">Algunos testimonios y cómo funciona</h2>
 <div style="display: flex; flex-wrap: wrap; gap: 20px; margin-top: 36px">
+
+<!-- Tarjeta 1: Cómo Funciona (Vturb Smartplayer 1) -->
 <div style="flex: 1 1 440px; min-width: 0; background: #141414; border: 1px solid #262626; border-radius: 24px; overflow: hidden; display: flex; flex-wrap: wrap">
-<div style="position: relative; flex: 0 1 260px; min-width: 220px; aspect-ratio: 9 / 16; background: #000000; margin: 0 auto">
-<video src="https://pub-b2dd5583a11449d5b14249f29b0034b3.r2.dev/assets/d92f3e0523564bb9b9c1edc4c65bb04f.mp4" poster="https://pub-b2dd5583a11449d5b14249f29b0034b3.r2.dev/assets/e04a7a18c85f2fefe8a4a0955f090bfb.jpg" autoPlay="{{ yes }}" muted="{{ yes }}" loop="{{ yes }}" playsInline="{{ yes }}" controls="{{ yes }}" preload="metadata" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></video>
-<div style="position: absolute; left: 12px; top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #FFFFFF; background: rgba(0,0,0,0.6); padding: 5px 9px; border-radius: 999px; pointer-events: none">● ASÍ TRABAJAMOS</div>
+<div style="position: relative; flex: 0 1 260px; min-width: 220px; width: 100%; background: #000000; margin: 0 auto; display: flex; align-items: center">
+  <div style="width: 100%">
+    <vturb-smartplayer id="vid-6aed15b7d8db469b29cb6afb" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;">
+      <div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 177.77777777777777% 0 0; z-index: 0; background-color: black;"></div>
+    </vturb-smartplayer>
+  </div>
 </div>
 <div style="flex: 1 1 200px; min-width: 0; padding: 26px; display: flex; flex-direction: column; justify-content: center; background: radial-gradient(80% 70% at 100% 0%, #2A1F04 0%, #141414 60%)">
 <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #FFC400">CÓMO FUNCIONA</div>
@@ -1209,10 +1287,15 @@ a{color:#FFC400}a:hover{color:#FFD54A}
 <p style="font-size: 15px; line-height: 1.55; color: #B5B5B0; margin: 14px 0 0">Te mostramos cómo es una sesión con nosotros: el equipo, los sets y cómo sacamos los videos de todo el mes.</p>
 </div>
 </div>
+
+<!-- Tarjeta 2: Testimonio Lina (Vturb Smartplayer 2) -->
 <div style="flex: 1 1 440px; min-width: 0; background: #141414; border: 1px solid #262626; border-radius: 24px; overflow: hidden; display: flex; flex-wrap: wrap">
-<div style="position: relative; flex: 0 1 260px; min-width: 220px; aspect-ratio: 9 / 16; background: #000000; margin: 0 auto">
-<video src="https://pub-b2dd5583a11449d5b14249f29b0034b3.r2.dev/assets/a183fb8a11ce891220bb45aab0f6f030.mp4" poster="https://pub-b2dd5583a11449d5b14249f29b0034b3.r2.dev/assets/2bcaabc906f6d69c52ab6717a1dbc889.jpg" autoPlay="{{ yes }}" muted="{{ yes }}" loop="{{ yes }}" playsInline="{{ yes }}" controls="{{ yes }}" preload="metadata" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover"></video>
-<div style="position: absolute; left: 12px; top: 12px; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #FFFFFF; background: rgba(0,0,0,0.6); padding: 5px 9px; border-radius: 999px; pointer-events: none">● TESTIMONIO DE GRABACIÓN DE GRABACIÓN</div>
+<div style="position: relative; flex: 0 1 260px; min-width: 220px; width: 100%; background: #000000; margin: 0 auto; display: flex; align-items: center">
+  <div style="width: 100%">
+    <vturb-smartplayer id="vid-6aed15c1651497435eb455c2" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;">
+      <div class="vturb-player-placeholder" style="position: relative; width: 100%; padding: 177.77777777777777% 0 0; z-index: 0; background-color: black;"></div>
+    </vturb-smartplayer>
+  </div>
 </div>
 <div style="flex: 1 1 200px; min-width: 0; padding: 26px; display: flex; flex-direction: column; justify-content: center; background: radial-gradient(80% 70% at 100% 0%, #2A1F04 0%, #141414 60%)">
 <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #FFC400">TESTIMONIOS DE GRABACIÓN</div>
@@ -1221,17 +1304,27 @@ a{color:#FFC400}a:hover{color:#FFD54A}
 <p style="font-size: 15px; line-height: 1.55; color: #B5B5B0; margin: 14px 0 0">@linaparadam cuenta cómo grabó 15 reels un VSL y sus anuncios en una sola sesión de 4 horas.</p>
 </div>
 </div>
+
 </div>
 </section>
 
 <!-- PORTAFOLIO -->
 <section id="portafolio" class="{{ portClass }}" style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 40px">
-<div style="display: flex; justify-content: center">
-<div class="portfolio-tabs" style="display: flex; gap: 4px; background: #111111; border: 1px solid #262626; padding: 5px; border-radius: 999px; flex-wrap: wrap; justify-content: center">
-<button type="button" onClick="{{ showEdit }}" style="{{ tabEdit }}">Grabación + Edición</button>
-<button type="button" onClick="{{ showGrab }}" style="{{ tabGrab }}">Solo grabación 4h</button>
-</div>
-</div>
+  <div class="portfolio-tabs-wrapper">
+    <p class="portfolio-tabs-hint">
+      Haz clic en <strong>Grabaci&oacute;n + Edici&oacute;n</strong> para ver nuestro contenido editado o en <strong>Solo grabaci&oacute;n 4h</strong> para conocer los videos y sets grabados en una sola sesi&oacute;n:
+    </p>
+    <div class="portfolio-tabs-container">
+      <div class="portfolio-tabs" style="display: flex; gap: 4px; background: #111111; border: 1px solid #262626; padding: 5px; border-radius: 999px; flex-wrap: wrap; justify-content: center; position: relative">
+        <button type="button" onClick="{{ showEdit }}" style="{{ tabEdit }}">Grabaci&oacute;n + Edici&oacute;n</button>
+        <button type="button" onClick="{{ showGrab }}" style="{{ tabGrab }}">Solo grabaci&oacute;n 4h</button>
+      </div>
+      <!-- Animación del puntero interactivo -->
+      <svg class="pointer-cursor-anim" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3L10.5 21L13.5 13.5L21 10.5L3 3Z" fill="#FFC400" stroke="#000000" stroke-width="1.8" stroke-linejoin="round"/>
+      </svg>
+    </div>
+  </div>
 
 <sc-for list="{{ groups }}" as="g" hint-placeholder-count="2">
 <div class="{{ g.groupClass }}" style="{{ g.groupStyle }}">
@@ -1830,6 +1923,21 @@ document.addEventListener('DOMContentLoaded', function() {
     <a href="https://wa.me/573247422849?text=Hola%2C%20me%20interesa%20el%20plan%20de%20grabaci%C3%B3n%20%2B%20edici%C3%B3n.%20%C2%BFMe%20cuentas%20c%C3%B3mo%20funciona%3F" target="_blank" rel="noopener" id="modalCtaBtn" class="modal-cta">Quiero grabar as&iacute;</a>
   </div>
 </div>
+
+
+<script type="text/javascript">
+  (function() {
+    var s1 = document.createElement("script");
+    s1.src = "https://scripts.converteai.net/fc50f7e4-860e-4b6f-b6a1-a84412645b74/players/6aed15b7d8db469b29cb6afb/v4/player.js";
+    s1.async = true;
+    document.head.appendChild(s1);
+
+    var s2 = document.createElement("script");
+    s2.src = "https://scripts.converteai.net/fc50f7e4-860e-4b6f-b6a1-a84412645b74/players/6aed15c1651497435eb455c2/v4/player.js";
+    s2.async = true;
+    document.head.appendChild(s2);
+  })();
+</script>
 
 </body>
 </html>
