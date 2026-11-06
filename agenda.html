@@ -300,35 +300,36 @@ a{color:#FFC400}a:hover{color:#FFD54A}
   padding: 10px 0 20px;
 }
 
-/* Carrusel infinito en bucle suave (BTS Marquee) */
+/* Carrusel interactivo y suave para Detrás de Cámaras (Drag + Touch + Auto-scroll) */
 .bts-marquee-wrapper {
   position: relative;
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   padding: 20px 0 30px;
+  cursor: grab;
+  scroll-behavior: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+}
+
+.bts-marquee-wrapper::-webkit-scrollbar {
+  display: none;
+}
+
+.bts-marquee-wrapper.is-dragging {
+  cursor: grabbing !important;
+  user-select: none;
 }
 
 .bts-marquee-track {
   display: flex;
   gap: 24px;
   width: max-content;
-  animation: btsMarquee 45s linear infinite;
   will-change: transform;
-}
-
-.bts-marquee-wrapper:hover .bts-marquee-track {
-  animation-play-state: paused;
-}
-
-@keyframes btsMarquee {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
 }
 
 .bts-marquee-track .cs-bts {
@@ -339,7 +340,13 @@ a{color:#FFC400}a:hover{color:#FFD54A}
   border: 1px solid rgba(255, 196, 0, 0.28) !important;
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.7), 0 0 20px rgba(255, 196, 0, 0.12) !important;
   transition: transform .35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow .35s ease, border-color .35s ease !important;
-  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.bts-marquee-track .cs-bts img {
+  pointer-events: none;
+  user-select: none;
 }
 
 .bts-marquee-track .cs-bts:hover {
@@ -357,7 +364,6 @@ a{color:#FFC400}a:hover{color:#FFD54A}
   }
   .bts-marquee-track {
     gap: 16px;
-    animation-duration: 35s;
   }
 }
 
@@ -1602,9 +1608,9 @@ class Component extends DCLogic {
       return { img: B + img, video: B + vid, name: name || '[Nombre]', title: name || '[Nombre]', line: line || '[#] outfits · [nicho]', metric: metric || '[#] sets en 4 h', story: customStory || story };
     }
     var grab = [
-      mk('45f7a4777ecdf76d391cdb414bd52b39', 'bd21df53a00841423cf1e33bdf8610f8', 'David Lambo', 'Trading', '108 reels editados', 'Grabamos dos sesiones: 1 donde logramos 28 reels en 4hr y otra 80 reels en 2 días.'),
-      mk('724a2b4c3a41299019db6b5d32205fb5', '76b098238e056be679c0043f38f28d83', 'Praxen', 'Laboratorio dental', '13 reels editados', 'Grabamos Editamos 13 reels y los editamos en 4 horas.'),
-      mk('51f2474438c81973b975b94acb079136', '27cc87778700b8358d946584f0a158f4', 'Eduard', 'Laboratorio dental', '16 reels editados', 'Grabamos Editamos 16 reels y los editamos en 4 horas.'),
+      mk('45f7a4777ecdf76d391cdb414bd52b39', 'david_lambo_audio.mp4', 'David Lambo', 'Trading', '108 reels editados', 'Grabamos dos sesiones: 1 donde logramos 28 reels en 4hr y otra 80 reels en 2 días.'),
+      mk('724a2b4c3a41299019db6b5d32205fb5', 'praxen_audio.mp4', 'Praxen', 'Laboratorio dental', '13 reels editados', 'Grabamos Editamos 13 reels y los editamos en 4 horas.'),
+      mk('51f2474438c81973b975b94acb079136', 'eduard_audio.mp4', 'Eduard', 'Laboratorio dental', '16 reels editados', 'Grabamos Editamos 16 reels y los editamos en 4 horas.'),
       mk('grab_globalix.jpg', 'grab_globalix.mp4', 'Globalix', 'Idiomas', '14 reels en 4 h', 'Grabamos 14 reels en 4 horas.'),
       mk('grab_cristian_trading.jpg', 'grab_cristian_trading.mp4', 'Cristian', 'Trading', '36 reels en 2 sesiones', 'Tuvimos 2 sesiones de 4 horas, una de 16 y otra logramos 20 reels.'),
       mk('grab_cirugia_extrema.jpg', 'grab_cirugia_extrema.mp4', 'Cirugía Extrema', 'Cirugía plástica', '30 reels en 2 sesiones', 'Tuvimos 2 sesiones de 4 horas, una de 15 y otra logramos 15 reels.'),
@@ -1930,6 +1936,105 @@ document.addEventListener('DOMContentLoaded', function() {
     s2.src = "https://scripts.converteai.net/fc50f7e4-860e-4b6f-b6a1-a84412645b74/players/6aed15c1651497435eb455c2/v4/player.js";
     s2.async = true;
     document.head.appendChild(s2);
+  })();
+</script>
+
+
+<script type="text/javascript">
+  // Script para hacer el carrusel de Detrás de Cámaras interactivo (Drag con mouse, Swipe táctil y auto-desplazamiento continuo)
+  (function() {
+    function initBtsCarousel() {
+      var wrapper = document.getElementById('btsMarqueeWrapper');
+      var track = wrapper ? wrapper.querySelector('.bts-marquee-track') : null;
+      if (!wrapper || !track) return;
+
+      var isDown = false;
+      var startX = 0;
+      var scrollLeft = 0;
+      var autoSpeed = 0.8; // píxeles por frame de auto-desplazamiento
+      var isUserInteracting = false;
+      var resumeTimeout = null;
+
+      // Animación suave de auto-scroll
+      function step() {
+        if (!isUserInteracting) {
+          wrapper.scrollLeft += autoSpeed;
+          // Si llega a la mitad duplicada, volver suavemente al inicio para bucle infinito
+          var halfScroll = track.scrollWidth / 2;
+          if (wrapper.scrollLeft >= halfScroll) {
+            wrapper.scrollLeft = 0;
+          } else if (wrapper.scrollLeft <= 0) {
+            wrapper.scrollLeft = halfScroll;
+          }
+        }
+        requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+
+      function pauseAuto() {
+        isUserInteracting = true;
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+      }
+
+      function resumeAuto() {
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+        resumeTimeout = setTimeout(function() {
+          isUserInteracting = false;
+        }, 1800);
+      }
+
+      // Mouse drag
+      wrapper.addEventListener('mousedown', function(e) {
+        isDown = true;
+        pauseAuto();
+        wrapper.classList.add('is-dragging');
+        startX = e.pageX - wrapper.offsetLeft;
+        scrollLeft = wrapper.scrollLeft;
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (isDown) {
+          isDown = false;
+          wrapper.classList.remove('is-dragging');
+          resumeAuto();
+        }
+      });
+
+      wrapper.addEventListener('mouseleave', function() {
+        if (!isDown) resumeAuto();
+      });
+
+      wrapper.addEventListener('mouseenter', function() {
+        pauseAuto();
+      });
+
+      wrapper.addEventListener('mousemove', function(e) {
+        if (!isDown) return;
+        e.preventDefault();
+        var x = e.pageX - wrapper.offsetLeft;
+        var walk = (x - startX) * 1.5;
+        wrapper.scrollLeft = scrollLeft - walk;
+      });
+
+      // Touch swipe para móviles
+      wrapper.addEventListener('touchstart', function() {
+        pauseAuto();
+      }, { passive: true });
+
+      wrapper.addEventListener('touchend', function() {
+        resumeAuto();
+      }, { passive: true });
+
+      wrapper.addEventListener('touchcancel', function() {
+        resumeAuto();
+      }, { passive: true });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initBtsCarousel);
+    } else {
+      initBtsCarousel();
+    }
   })();
 </script>
 
