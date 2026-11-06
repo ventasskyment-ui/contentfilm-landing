@@ -1042,30 +1042,40 @@ a{color:#FFC400}a:hover{color:#FFD54A}
   }
 
 
-  /* Animación del cursor apuntando al botón Solo Grabación 4h */
+    /* Animacion del cursor apuntando al boton Solo Grabacion 4h */
+  #portafolio {
+    text-align: center !important;
+  }
   .portfolio-tabs-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    margin: 0 auto;
-    text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+    position: relative !important;
+    margin: 0 auto !important;
+    text-align: center !important;
   }
   .portfolio-tabs-hint {
-    font-size: 15px;
-    line-height: 1.5;
-    color: #C9C9C4;
-    margin-bottom: 22px;
-    max-width: 580px;
-    padding: 0 16px;
+    font-size: 15px !important;
+    line-height: 1.5 !important;
+    color: #C9C9C4 !important;
+    margin: 0 auto 22px auto !important;
+    max-width: 580px !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 0 16px !important;
+    display: block !important;
   }
   .portfolio-tabs-hint strong {
-    color: #FFC400;
+    color: #FFC400 !important;
   }
   .portfolio-tabs-container {
-    position: relative;
-    display: inline-flex;
-    justify-content: center;
+    position: relative !important;
+    display: inline-flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin: 0 auto !important;
   }
   .pointer-cursor-anim {
     position: absolute;
@@ -1313,16 +1323,16 @@ a{color:#FFC400}a:hover{color:#FFD54A}
 
 <!-- PORTAFOLIO -->
 <section id="portafolio" class="{{ portClass }}" style="max-width: 1240px; margin: 0 auto; padding: 56px 24px 40px">
-  <div class="portfolio-tabs-wrapper">
-    <p class="portfolio-tabs-hint">
+    <div class="portfolio-tabs-wrapper" style="display: flex !important; flex-direction: column !important; align-items: center !important; justify-content: center !important; width: 100% !important; margin: 0 auto !important; text-align: center !important;">
+    <p class="portfolio-tabs-hint" style="text-align: center !important; margin: 0 auto 22px auto !important; max-width: 580px !important; width: 100% !important; display: block !important;">
       Haz clic en <strong>Grabaci&oacute;n + Edici&oacute;n</strong> para ver nuestro contenido editado o en <strong>Solo grabaci&oacute;n 4h</strong> para conocer los videos y sets grabados en una sola sesi&oacute;n:
     </p>
-    <div class="portfolio-tabs-container">
-      <div class="portfolio-tabs" style="display: flex; gap: 4px; background: #111111; border: 1px solid #262626; padding: 5px; border-radius: 999px; flex-wrap: wrap; justify-content: center; position: relative">
+    <div class="portfolio-tabs-container" style="display: inline-flex !important; position: relative !important; margin: 0 auto !important; justify-content: center !important; align-items: center !important;">
+      <div class="portfolio-tabs" style="display: inline-flex !important; gap: 4px !important; background: #111111 !important; border: 1px solid #262626 !important; padding: 5px !important; border-radius: 999px !important; flex-wrap: wrap !important; justify-content: center !important; align-items: center !important; margin: 0 auto !important;">
         <button type="button" onClick="{{ showEdit }}" style="{{ tabEdit }}">Grabaci&oacute;n + Edici&oacute;n</button>
         <button type="button" onClick="{{ showGrab }}" style="{{ tabGrab }}">Solo grabaci&oacute;n 4h</button>
       </div>
-      <!-- Animación del puntero interactivo -->
+      <!-- Animacion del puntero interactivo -->
       <svg class="pointer-cursor-anim" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M3 3L10.5 21L13.5 13.5L21 10.5L3 3Z" fill="#FFC400" stroke="#000000" stroke-width="1.8" stroke-linejoin="round"/>
       </svg>
