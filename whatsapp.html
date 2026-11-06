@@ -340,10 +340,25 @@ a{color:#FFC400}a:hover{color:#FFD54A}
 }
 
 .bts-marquee-track {
-  display: flex;
-  gap: 24px;
-  width: max-content;
-  will-change: transform;
+  display: flex !important;
+  gap: 24px !important;
+  width: max-content !important;
+  will-change: transform !important;
+  animation: btsInfiniteMarquee 35s linear infinite !important;
+}
+
+.bts-marquee-wrapper.is-paused .bts-marquee-track,
+.bts-marquee-wrapper:hover .bts-marquee-track {
+  animation-play-state: paused !important;
+}
+
+@keyframes btsInfiniteMarquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
 }
 
 .bts-marquee-track .cs-bts {
@@ -1974,97 +1989,69 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script type="text/javascript">
-  // Carrusel continuo e interactivo para Detrás de Cámaras (Auto-scroll garantizado + Drag + Touch)
+  // Carrusel continuo e interactivo para Detrás de Cámaras
+  // Animación CSS continua garantizada + Drag / Swipe táctil para mover a donde quieras
   (function() {
-    function initBtsCarousel() {
+    function setupBtsCarousel() {
       var wrapper = document.getElementById('btsMarqueeWrapper');
       var track = wrapper ? wrapper.querySelector('.bts-marquee-track') : null;
       if (!wrapper || !track) return;
 
-      // Duplicar elementos internamente para scroll infinito perfecto sin saltos
-      if (!track.dataset.duplicated) {
-        track.dataset.duplicated = 'true';
-        track.innerHTML += track.innerHTML;
-      }
-
       var isDown = false;
       var startX = 0;
-      var scrollStart = 0;
-      var isInteracting = false;
-      var resumeTimer = null;
-      var autoSpeed = 1.0; // Velocidad de desplazamiento constante (px por frame)
-      var currentPos = wrapper.scrollLeft || 0;
+      var startScrollLeft = 0;
+      var resumeTimeout = null;
 
-      function pauseScroll() {
-        isInteracting = true;
-        if (resumeTimer) clearTimeout(resumeTimer);
+      function pauseCarousel() {
+        wrapper.classList.add('is-paused');
+        if (resumeTimeout) clearTimeout(resumeTimeout);
       }
 
-      function resumeScroll() {
-        if (resumeTimer) clearTimeout(resumeTimer);
-        resumeTimer = setTimeout(function() {
-          isInteracting = false;
-          currentPos = wrapper.scrollLeft;
-        }, 1200);
+      function resumeCarousel() {
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+        resumeTimeout = setTimeout(function() {
+          wrapper.classList.remove('is-paused');
+        }, 1500);
       }
 
-      // Ciclo de auto-scroll
-      function autoScrollLoop() {
-        if (!isInteracting) {
-          currentPos += autoSpeed;
-          var maxLoop = track.scrollWidth / 2;
-          if (maxLoop > 0 && currentPos >= maxLoop) {
-            currentPos = 0;
-            wrapper.scrollLeft = 0;
-          } else {
-            wrapper.scrollLeft = currentPos;
-          }
-        } else {
-          currentPos = wrapper.scrollLeft;
-        }
-        requestAnimationFrame(autoScrollLoop);
-      }
-      requestAnimationFrame(autoScrollLoop);
-
-      // Eventos de Touch (Móviles / Tablets)
+      // Touch events (Móviles)
       wrapper.addEventListener('touchstart', function(e) {
-        pauseScroll();
         isDown = true;
+        pauseCarousel();
         startX = e.touches[0].pageX;
-        scrollStart = wrapper.scrollLeft;
+        startScrollLeft = wrapper.scrollLeft;
       }, { passive: true });
 
       wrapper.addEventListener('touchmove', function(e) {
         if (!isDown) return;
         var diff = e.touches[0].pageX - startX;
-        wrapper.scrollLeft = scrollStart - diff;
-        currentPos = wrapper.scrollLeft;
+        wrapper.scrollLeft = startScrollLeft - diff;
       }, { passive: true });
 
       wrapper.addEventListener('touchend', function() {
         isDown = false;
-        resumeScroll();
+        resumeCarousel();
       }, { passive: true });
 
       wrapper.addEventListener('touchcancel', function() {
         isDown = false;
-        resumeScroll();
+        resumeCarousel();
       }, { passive: true });
 
-      // Eventos de Mouse Drag (Computador)
+      // Mouse Drag events (Desktop)
       wrapper.addEventListener('mousedown', function(e) {
         isDown = true;
-        pauseScroll();
+        pauseCarousel();
         wrapper.classList.add('is-dragging');
         startX = e.pageX - wrapper.offsetLeft;
-        scrollStart = wrapper.scrollLeft;
+        startScrollLeft = wrapper.scrollLeft;
       });
 
       window.addEventListener('mouseup', function() {
         if (isDown) {
           isDown = false;
           wrapper.classList.remove('is-dragging');
-          resumeScroll();
+          resumeCarousel();
         }
       });
 
@@ -2073,23 +2060,25 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         var x = e.pageX - wrapper.offsetLeft;
         var diff = (x - startX) * 1.5;
-        wrapper.scrollLeft = scrollStart - diff;
-        currentPos = wrapper.scrollLeft;
+        wrapper.scrollLeft = startScrollLeft - diff;
       });
 
       wrapper.addEventListener('mouseenter', function() {
-        pauseScroll();
+        pauseCarousel();
       });
 
       wrapper.addEventListener('mouseleave', function() {
-        if (!isDown) resumeScroll();
+        if (!isDown) resumeCarousel();
       });
     }
 
+    // Inicializar cuando el DOM y los componentes estén listos
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', initBtsCarousel);
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(setupBtsCarousel, 300);
+      });
     } else {
-      initBtsCarousel();
+      setTimeout(setupBtsCarousel, 300);
     }
   })();
 </script>
