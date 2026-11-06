@@ -1955,93 +1955,116 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 <script type="text/javascript">
-  // Script para hacer el carrusel de Detrás de Cámaras interactivo (Drag con mouse, Swipe táctil y auto-desplazamiento continuo)
+  // Carrusel continuo e interactivo para Detrás de Cámaras (Auto-scroll garantizado + Drag + Touch)
   (function() {
     function initBtsCarousel() {
       var wrapper = document.getElementById('btsMarqueeWrapper');
       var track = wrapper ? wrapper.querySelector('.bts-marquee-track') : null;
       if (!wrapper || !track) return;
 
+      // Duplicar elementos internamente para scroll infinito perfecto sin saltos
+      if (!track.dataset.duplicated) {
+        track.dataset.duplicated = 'true';
+        track.innerHTML += track.innerHTML;
+      }
+
       var isDown = false;
       var startX = 0;
-      var scrollLeft = 0;
-      var autoSpeed = 0.8; // píxeles por frame de auto-desplazamiento
-      var isUserInteracting = false;
-      var resumeTimeout = null;
+      var scrollStart = 0;
+      var isInteracting = false;
+      var resumeTimer = null;
+      var autoSpeed = 1.0; // Velocidad de desplazamiento constante (px por frame)
+      var currentPos = wrapper.scrollLeft || 0;
 
-      // Animación suave de auto-scroll
-      function step() {
-        if (!isUserInteracting) {
-          wrapper.scrollLeft += autoSpeed;
-          // Si llega a la mitad duplicada, volver suavemente al inicio para bucle infinito
-          var halfScroll = track.scrollWidth / 2;
-          if (wrapper.scrollLeft >= halfScroll) {
+      function pauseScroll() {
+        isInteracting = true;
+        if (resumeTimer) clearTimeout(resumeTimer);
+      }
+
+      function resumeScroll() {
+        if (resumeTimer) clearTimeout(resumeTimer);
+        resumeTimer = setTimeout(function() {
+          isInteracting = false;
+          currentPos = wrapper.scrollLeft;
+        }, 1200);
+      }
+
+      // Ciclo de auto-scroll
+      function autoScrollLoop() {
+        if (!isInteracting) {
+          currentPos += autoSpeed;
+          var maxLoop = track.scrollWidth / 2;
+          if (maxLoop > 0 && currentPos >= maxLoop) {
+            currentPos = 0;
             wrapper.scrollLeft = 0;
-          } else if (wrapper.scrollLeft <= 0) {
-            wrapper.scrollLeft = halfScroll;
+          } else {
+            wrapper.scrollLeft = currentPos;
           }
+        } else {
+          currentPos = wrapper.scrollLeft;
         }
-        requestAnimationFrame(step);
+        requestAnimationFrame(autoScrollLoop);
       }
-      requestAnimationFrame(step);
+      requestAnimationFrame(autoScrollLoop);
 
-      function pauseAuto() {
-        isUserInteracting = true;
-        if (resumeTimeout) clearTimeout(resumeTimeout);
-      }
+      // Eventos de Touch (Móviles / Tablets)
+      wrapper.addEventListener('touchstart', function(e) {
+        pauseScroll();
+        isDown = true;
+        startX = e.touches[0].pageX;
+        scrollStart = wrapper.scrollLeft;
+      }, { passive: true });
 
-      function resumeAuto() {
-        if (resumeTimeout) clearTimeout(resumeTimeout);
-        resumeTimeout = setTimeout(function() {
-          isUserInteracting = false;
-        }, 1800);
-      }
+      wrapper.addEventListener('touchmove', function(e) {
+        if (!isDown) return;
+        var diff = e.touches[0].pageX - startX;
+        wrapper.scrollLeft = scrollStart - diff;
+        currentPos = wrapper.scrollLeft;
+      }, { passive: true });
 
-      // Mouse drag
+      wrapper.addEventListener('touchend', function() {
+        isDown = false;
+        resumeScroll();
+      }, { passive: true });
+
+      wrapper.addEventListener('touchcancel', function() {
+        isDown = false;
+        resumeScroll();
+      }, { passive: true });
+
+      // Eventos de Mouse Drag (Computador)
       wrapper.addEventListener('mousedown', function(e) {
         isDown = true;
-        pauseAuto();
+        pauseScroll();
         wrapper.classList.add('is-dragging');
         startX = e.pageX - wrapper.offsetLeft;
-        scrollLeft = wrapper.scrollLeft;
+        scrollStart = wrapper.scrollLeft;
       });
 
       window.addEventListener('mouseup', function() {
         if (isDown) {
           isDown = false;
           wrapper.classList.remove('is-dragging');
-          resumeAuto();
+          resumeScroll();
         }
-      });
-
-      wrapper.addEventListener('mouseleave', function() {
-        if (!isDown) resumeAuto();
-      });
-
-      wrapper.addEventListener('mouseenter', function() {
-        pauseAuto();
       });
 
       wrapper.addEventListener('mousemove', function(e) {
         if (!isDown) return;
         e.preventDefault();
         var x = e.pageX - wrapper.offsetLeft;
-        var walk = (x - startX) * 1.5;
-        wrapper.scrollLeft = scrollLeft - walk;
+        var diff = (x - startX) * 1.5;
+        wrapper.scrollLeft = scrollStart - diff;
+        currentPos = wrapper.scrollLeft;
       });
 
-      // Touch swipe para móviles
-      wrapper.addEventListener('touchstart', function() {
-        pauseAuto();
-      }, { passive: true });
+      wrapper.addEventListener('mouseenter', function() {
+        pauseScroll();
+      });
 
-      wrapper.addEventListener('touchend', function() {
-        resumeAuto();
-      }, { passive: true });
-
-      wrapper.addEventListener('touchcancel', function() {
-        resumeAuto();
-      }, { passive: true });
+      wrapper.addEventListener('mouseleave', function() {
+        if (!isDown) resumeScroll();
+      });
     }
 
     if (document.readyState === 'loading') {
