@@ -1083,12 +1083,7 @@ a{color:#FFC400}a:hover{color:#FFD54A}
   box-shadow: 0 0 25px rgba(255, 196, 0, 0.4) !important;
 }
 
-  
-    .brands-carousel-track {
-      gap: 20px;
-      animation-duration: 35s;
-    }
-  }
+
 
 
     /* Animacion del cursor apuntando al boton Solo Grabacion 4h */
@@ -1500,47 +1495,75 @@ a{color:#FFC400}a:hover{color:#FFD54A}
     margin: 12px 0 0;
   }
   .cf-brands-wrap {
-    position: relative;
-    overflow: hidden;
-    margin-top: 40px;
-    padding: 26px 0;
-    background: #070707;
-    border-top: 1px solid #1F1F1F;
-    border-bottom: 1px solid #1F1F1F;
+    position: relative !important;
+    overflow-x: hidden !important;
+    overflow-y: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    margin-top: 40px !important;
+    padding: 26px 0 !important;
+    background: #070707 !important;
+    border-top: 1px solid #1F1F1F !important;
+    border-bottom: 1px solid #1F1F1F !important;
     -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
             mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
   }
   .cf-brands-track {
-    display: flex;
-    align-items: center;
-    width: max-content;
-    animation: cfBrandsScroll 70s linear infinite;
+    display: flex !important;
+    align-items: center !important;
+    width: max-content !important;
+    will-change: transform !important;
+    -webkit-animation: cfBrandsScroll 45s linear infinite !important;
+    animation: cfBrandsScroll 45s linear infinite !important;
   }
-  .cf-brands-wrap:hover .cf-brands-track { animation-play-state: paused; }
+  .cf-brands-wrap:hover .cf-brands-track { 
+    -webkit-animation-play-state: paused !important;
+    animation-play-state: paused !important; 
+  }
   .cf-brand {
-    flex: 0 0 auto;
-    height: 70px;
-    padding: 0 44px;
-    display: flex;
-    align-items: center;
+    flex: 0 0 auto !important;
+    height: 70px !important;
+    padding: 0 44px !important;
+    display: flex !important;
+    align-items: center !important;
   }
   .cf-brand img {
-    display: block;
-    width: auto;
-    opacity: .72;
-    transition: opacity .3s ease;
+    display: block !important;
+    width: auto !important;
+    opacity: .72 !important;
+    transition: opacity .3s ease !important;
+    pointer-events: none;
+    -webkit-user-select: none;
+    user-select: none;
   }
-  .cf-brand img:hover { opacity: 1; }
+  .cf-brand img:hover { opacity: 1 !important; }
+  
+  @-webkit-keyframes cfBrandsScroll {
+    0%   { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100% { -webkit-transform: translate3d(-50%, 0, 0); transform: translate3d(-50%, 0, 0); }
+  }
   @keyframes cfBrandsScroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
+    0%   { -webkit-transform: translate3d(0, 0, 0); transform: translate3d(0, 0, 0); }
+    100% { -webkit-transform: translate3d(-50%, 0, 0); transform: translate3d(-50%, 0, 0); }
   }
-  @media (max-width: 600px) {
-    .cf-brand { padding: 0 28px; }
-    .cf-brand img { transform: scale(.8); }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .cf-brands-track { animation-duration: 200s; }
+
+  @media (max-width: 768px) {
+    .cf-brands-wrap {
+      padding: 20px 0 !important;
+      margin-top: 28px !important;
+    }
+    .cf-brands-track {
+      -webkit-animation: cfBrandsScroll 32s linear infinite !important;
+      animation: cfBrandsScroll 32s linear infinite !important;
+    }
+    .cf-brand { 
+      padding: 0 24px !important; 
+      height: 56px !important;
+    }
+    .cf-brand img { 
+      transform: scale(.85) !important;
+      -webkit-transform: scale(.85) !important;
+    }
   }
 </style>
 
