@@ -679,7 +679,9 @@ a{color:#FFC400}a:hover{color:#FFD54A}
     align-items: center !important;
     width: 100% !important;
     gap: 12px !important;
-    margin-top: 6px !important;
+    margin-top: -38px !important;
+    position: relative !important;
+    z-index: 10 !important;
   }
   .hero-btn-primary, .hero-btn-secondary {
     width: 100% !important;
@@ -1496,7 +1498,7 @@ a{color:#FFC400}a:hover{color:#FFD54A}
   }
   .cf-brands-wrap {
     position: relative !important;
-    overflow-x: hidden !important;
+    overflow-x: auto !important;
     overflow-y: hidden !important;
     width: 100% !important;
     max-width: 100vw !important;
@@ -1505,8 +1507,20 @@ a{color:#FFC400}a:hover{color:#FFD54A}
     background: #070707 !important;
     border-top: 1px solid #1F1F1F !important;
     border-bottom: 1px solid #1F1F1F !important;
+    cursor: grab;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
             mask-image: linear-gradient(to right, transparent 0%, #000 12%, #000 88%, transparent 100%);
+  }
+  .cf-brands-wrap::-webkit-scrollbar {
+    display: none;
+  }
+  .cf-brands-wrap.is-dragging {
+    cursor: grabbing !important;
+    user-select: none;
+    -webkit-user-select: none;
   }
   .cf-brands-track {
     display: flex !important;
@@ -1516,7 +1530,8 @@ a{color:#FFC400}a:hover{color:#FFD54A}
     -webkit-animation: cfBrandsScroll 45s linear infinite !important;
     animation: cfBrandsScroll 45s linear infinite !important;
   }
-  .cf-brands-wrap:hover .cf-brands-track { 
+  .cf-brands-wrap:hover .cf-brands-track,
+  .cf-brands-wrap.is-paused .cf-brands-track { 
     -webkit-animation-play-state: paused !important;
     animation-play-state: paused !important; 
   }
@@ -2091,13 +2106,95 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     }
 
+    function setupBrandsCarousel() {
+      var wrapper = document.querySelector('.cf-brands-wrap');
+      var track = wrapper ? wrapper.querySelector('.cf-brands-track') : null;
+      if (!wrapper || !track) return;
+
+      var isDown = false;
+      var startX = 0;
+      var startScrollLeft = 0;
+      var resumeTimeout = null;
+
+      function pauseCarousel() {
+        wrapper.classList.add('is-paused');
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+      }
+
+      function resumeCarousel() {
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+        resumeTimeout = setTimeout(function() {
+          wrapper.classList.remove('is-paused');
+        }, 1500);
+      }
+
+      // Touch events (Móviles)
+      wrapper.addEventListener('touchstart', function(e) {
+        isDown = true;
+        pauseCarousel();
+        startX = e.touches[0].pageX;
+        startScrollLeft = wrapper.scrollLeft;
+      }, { passive: true });
+
+      wrapper.addEventListener('touchmove', function(e) {
+        if (!isDown) return;
+        var diff = e.touches[0].pageX - startX;
+        wrapper.scrollLeft = startScrollLeft - diff;
+      }, { passive: true });
+
+      wrapper.addEventListener('touchend', function() {
+        isDown = false;
+        resumeCarousel();
+      }, { passive: true });
+
+      wrapper.addEventListener('touchcancel', function() {
+        isDown = false;
+        resumeCarousel();
+      }, { passive: true });
+
+      // Mouse Drag events (Desktop)
+      wrapper.addEventListener('mousedown', function(e) {
+        isDown = true;
+        pauseCarousel();
+        wrapper.classList.add('is-dragging');
+        startX = e.pageX - wrapper.offsetLeft;
+        startScrollLeft = wrapper.scrollLeft;
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (isDown) {
+          isDown = false;
+          wrapper.classList.remove('is-dragging');
+          resumeCarousel();
+        }
+      });
+
+      wrapper.addEventListener('mousemove', function(e) {
+        if (!isDown) return;
+        e.preventDefault();
+        var x = e.pageX - wrapper.offsetLeft;
+        var diff = (x - startX) * 1.5;
+        wrapper.scrollLeft = startScrollLeft - diff;
+      });
+
+      wrapper.addEventListener('mouseenter', function() {
+        pauseCarousel();
+      });
+
+      wrapper.addEventListener('mouseleave', function() {
+        if (!isDown) resumeCarousel();
+      });
+    }
+
     // Inicializar cuando el DOM y los componentes estén listos
     if (document.readyState === 'loading') {
       document.addEventListener('DOMContentLoaded', function() {
         setTimeout(setupBtsCarousel, 300);
+        setTimeout(setupBrandsCarousel, 300);
       });
     } else {
       setTimeout(setupBtsCarousel, 300);
+      setTimeout(setupBrandsCarousel, 300);
     }
   })();
 </script>
